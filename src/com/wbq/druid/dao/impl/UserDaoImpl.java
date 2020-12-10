@@ -5,6 +5,9 @@ import com.wbq.druid.entity.User;
 import com.wbq.druid.utils.DateUtils;
 import com.wbq.druid.utils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -44,16 +47,31 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public int delete(int id) {
+        try {
+            return queryRunner.update("delete from users where id =?", id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return 0;
     }
 
     @Override
     public User query(int id) {
+        try {
+            return queryRunner.query("select * from users where id ?", new BeanHandler<User>(User.class), id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public List<User> queryAll() {
+        try {
+            return queryRunner.query("select * from users ;", new BeanListHandler<User>(User.class));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return null;
     }
 }
